@@ -25,7 +25,7 @@ public class ToastControl {
 	public static final String MODNAME = "Toast Control";
 	public static final String VERSION = "1.3.0";
 	public static final String VERS = "[1.12, 1.13)";
-	public static final String DEPS = "required-after:placebo@[1.1.2,)";
+	public static final String DEPS = "required-after:placebo@[1.1.3,)";
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
