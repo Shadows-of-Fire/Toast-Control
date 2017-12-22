@@ -1,0 +1,21 @@
+[
+{
+  "modid": "toastcontrol",
+  "name": "Toast Control",
+  "description": "Control what toasts are enabled, because some of them are useless.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authors": [
+    "Shadows_of_Fire"
+  ],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
