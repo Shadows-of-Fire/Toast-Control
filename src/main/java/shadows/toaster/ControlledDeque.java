@@ -12,6 +12,7 @@ public class ControlledDeque extends BlockedDeque<IToast> {
 
 	private static final long serialVersionUID = -5380678178676126928L;
 
+	@Override
 	public boolean isBlocked(IToast toast) {
 		if (ToastControlConfig.global) return true;
 		if (ToastControlConfig.globalVanilla && isVanillaToast(toast)) return true;

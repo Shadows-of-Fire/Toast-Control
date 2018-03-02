@@ -15,7 +15,7 @@ import shadows.toaster.ToastControl.ToastControlConfig;
 
 public class BetterGuiToast extends GuiToast {
 
-	protected ToastInstance[] visible = new ToastInstance[5];
+	protected ToastInstance[] visible = new ToastInstance[ToastControlConfig.toastCount];
 
 	public BetterGuiToast() {
 		super(Minecraft.getMinecraft());
@@ -61,19 +61,9 @@ public class BetterGuiToast extends GuiToast {
 		this.toastsQueue.clear();
 	}
 
-	@Override
-	public void add(IToast toast) {
-		this.toastsQueue.add(toast);
-	}
-
-	@Override
-	public Minecraft getMinecraft() {
-		return this.mc;
-	}
-
 	protected class ToastInstance {
 		protected final IToast toast;
-		protected long animationTime= -1L;
+		protected long animationTime = -1L;
 		protected long visibleTime = -1L;
 		protected int forcedShowTime = 0;
 		protected IToast.Visibility visibility = IToast.Visibility.SHOW;
@@ -86,15 +76,15 @@ public class BetterGuiToast extends GuiToast {
 		public IToast getToast() {
 			return this.toast;
 		}
-		
+
 		public void tick() {
 			forcedShowTime++;
 		}
 
 		protected float getVisibility(long sysTime) {
-			float f = MathHelper.clamp((sysTime - this.animationTime) / 600.0F, 0.0F, 1.0F);
+			float f = MathHelper.clamp((sysTime - this.animationTime) / 600F, 0F, 1F);
 			f = f * f;
-			return this.forcedShowTime > ToastControlConfig.forceTime && this.visibility == IToast.Visibility.HIDE ? 1.0F - f : f;
+			return this.forcedShowTime > ToastControlConfig.forceTime && this.visibility == IToast.Visibility.HIDE ? 1F - f : f;
 		}
 
 		public boolean render(int scaledWidth, int arrayPos) {
@@ -110,22 +100,20 @@ public class BetterGuiToast extends GuiToast {
 			}
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(scaledWidth - 160.0F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
-			GlStateManager.enableAlpha();
+			GlStateManager.translate(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
 			GlStateManager.enableBlend();
 			IToast.Visibility itoast$visibility = this.toast.draw(BetterGuiToast.this, i - this.visibleTime);
 			GlStateManager.disableBlend();
-			GlStateManager.disableAlpha();
 			GlStateManager.popMatrix();
 
 			if (this.forcedShowTime > ToastControlConfig.forceTime && itoast$visibility != this.visibility) {
-				this.animationTime = i - ((int) ((1.0F - this.getVisibility(i)) * 600.0F));
+				this.animationTime = i - ((long) ((1 - this.getVisibility(i)) * 600));
 				this.visibility = itoast$visibility;
 				this.visibility.playSound(BetterGuiToast.this.mc.getSoundHandler());
 			}
 
-			if(this.forcedShowTime > ToastControlConfig.forceTime) ToastControl.tracker.remove(this);
-			
+			if (this.forcedShowTime > ToastControlConfig.forceTime) ToastControl.tracker.remove(this);
+
 			return this.forcedShowTime > ToastControlConfig.forceTime && this.visibility == IToast.Visibility.HIDE && i - this.animationTime > 600L;
 		}
 	}
