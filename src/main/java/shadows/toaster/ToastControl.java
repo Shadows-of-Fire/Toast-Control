@@ -28,7 +28,7 @@ public class ToastControl {
 
 	public static final String MODID = "toastcontrol";
 	public static final String MODNAME = "Toast Control";
-	public static final String VERSION = "1.4.0";
+	public static final String VERSION = "1.4.1";
 	public static final String VERS = "[1.12, 1.13)";
 	public static final String DEPS = "required-after:placebo@[1.2.0,)";
 	
