@@ -15,7 +15,7 @@ import shadows.toaster.ToastControl.ToastControlConfig;
 
 public class BetterGuiToast extends GuiToast {
 
-	protected ToastInstance[] visible = new ToastInstance[ToastControlConfig.toastCount];
+	public ToastInstance[] visible = new ToastInstance[ToastControlConfig.toastCount];
 
 	public BetterGuiToast() {
 		super(Minecraft.getMinecraft());
@@ -43,13 +43,13 @@ public class BetterGuiToast extends GuiToast {
 
 	@Override
 	@Nullable
-	public <T extends IToast> T getToast(Class<? extends T> toastClass, Object token) {
+	public <T extends IToast> T getToast(Class<? extends T> toastClass, Object type) {
 		for (ToastInstance toastinstance : this.visible) {
-			if (toastinstance != null && toastClass.isAssignableFrom(toastinstance.getToast().getClass()) && toastinstance.getToast().getType().equals(token)) return toastClass.cast(toastinstance.getToast());
+			if (toastinstance != null && toastClass.isAssignableFrom(toastinstance.getToast().getClass()) && toastinstance.getToast().getType().equals(type)) return toastClass.cast(toastinstance.getToast());
 		}
 
 		for (IToast itoast : this.toastsQueue) {
-			if (toastClass.isAssignableFrom(itoast.getClass()) && itoast.getType().equals(token)) return toastClass.cast(itoast);
+			if (toastClass.isAssignableFrom(itoast.getClass()) && itoast.getType().equals(type)) return toastClass.cast(itoast);
 		}
 
 		return null;
@@ -61,7 +61,7 @@ public class BetterGuiToast extends GuiToast {
 		this.toastsQueue.clear();
 	}
 
-	protected class ToastInstance {
+	public class ToastInstance {
 		protected final IToast toast;
 		protected long animationTime = -1L;
 		protected long visibleTime = -1L;

@@ -28,29 +28,38 @@ public class ToastControl {
 
 	public static final String MODID = "toastcontrol";
 	public static final String MODNAME = "Toast Control";
-	public static final String VERSION = "1.4.1";
+	public static final String VERSION = "1.5.0";
 	public static final String VERS = "[1.12, 1.13)";
 	public static final String DEPS = "required-after:placebo@[1.2.0,)";
-	
+
 	public static final KeyBinding CLEAR = new KeyBinding("key.toastcontrol.clear", Keyboard.KEY_J, "key.toastcontrol.category");
-	
+	public static final ResourceLocation TRANSLUCENT = new ResourceLocation(MODID, "textures/gui/toasts.png");
+	public static final ResourceLocation TRANSPARENT = new ResourceLocation(MODID, "textures/gui/toasts2.png");
+	public static final ResourceLocation ORIGINAL = new ResourceLocation("textures/gui/toasts.png");
+
 	@SubscribeEvent
 	public void keys(KeyInputEvent e) {
-		if(Keyboard.isKeyDown(CLEAR.getKeyCode()) && CLEAR.isPressed()) Minecraft.getMinecraft().getToastGui().clear();
+		if (Keyboard.isKeyDown(CLEAR.getKeyCode()) && CLEAR.isPressed()) Minecraft.getMinecraft().getToastGui().clear();
 	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		Minecraft.getMinecraft().toastGui = new BetterGuiToast();
 		MinecraftForge.EVENT_BUS.register(this);
-		if (ToastControlConfig.translucent) ReflectionHelper.setPrivateValue(ResourceLocation.class, IToast.TEXTURE_TOASTS, MODID, "resourceDomain", "field_110626_a");
-		if (ToastControlConfig.transparent) ReflectionHelper.setPrivateValue(ResourceLocation.class, IToast.TEXTURE_TOASTS, "textures/gui/toasts2.png", "resourcePath", "field_110625_b");
+		handleToastReloc();
 		ClientRegistry.registerKeyBinding(CLEAR);
 	}
 
-	@SubscribeEvent
-	public void onConfigChanged(OnConfigChangedEvent event) {
-		if (event.getModID().equals(ToastControl.MODID)) ConfigManager.sync(ToastControl.MODID, Config.Type.INSTANCE);
+	private static void handleToastReloc() {
+		ResourceLocation target = IToast.TEXTURE_TOASTS;
+		if (ToastControlConfig.translucent) change(target, TRANSLUCENT);
+		if (ToastControlConfig.transparent) change(target, TRANSPARENT);
+		else if (!ToastControlConfig.translucent && !ToastControlConfig.transparent) change(target, ORIGINAL);
+	}
+
+	private static void change(ResourceLocation a, ResourceLocation b) {
+		ReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getResourceDomain(), "resourceDomain", "field_110626_a");
+		ReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getResourcePath(), "resourcePath", "field_110625_b");
 	}
 
 	public static List<ToastInstance> tracker = new ArrayList<>();
@@ -59,6 +68,15 @@ public class ToastControl {
 	public void clientTick(ClientTickEvent e) {
 		for (ToastInstance t : tracker)
 			t.tick();
+	}
+
+	@SubscribeEvent
+	public void onConfigChanged(OnConfigChangedEvent event) {
+		if (event.getModID().equals(ToastControl.MODID)) {
+			ConfigManager.sync(ToastControl.MODID, Config.Type.INSTANCE);
+			handleToastReloc();
+			((BetterGuiToast) Minecraft.getMinecraft().toastGui).visible = new ToastInstance[ToastControlConfig.toastCount];
+		}
 	}
 
 	@Config(modid = ToastControl.MODID, category = "Toast Types")
@@ -98,17 +116,14 @@ public class ToastControl {
 
 		@Config.Name("Translucent Toasts")
 		@Config.Comment("If toasts are slightly translucent.")
-		@Config.RequiresMcRestart
 		public static boolean translucent = true;
 
 		@Config.Name("Transparent Toasts")
 		@Config.Comment("If toasts do not draw a background.")
-		@Config.RequiresMcRestart
 		public static boolean transparent = false;
-		
+
 		@Config.Name("Max Toasts Shown")
 		@Config.Comment("The maximum number of toasts on the screen at once.  Default 3, Vanilla uses 5.")
-		@Config.RequiresMcRestart
 		@Config.RangeInt(min = 1, max = 7)
 		public static int toastCount = 3;
 	}
