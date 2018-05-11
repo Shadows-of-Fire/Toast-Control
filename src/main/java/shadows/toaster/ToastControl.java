@@ -3,6 +3,8 @@ package shadows.toaster;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
@@ -28,9 +30,10 @@ public class ToastControl {
 
 	public static final String MODID = "toastcontrol";
 	public static final String MODNAME = "Toast Control";
-	public static final String VERSION = "1.5.0";
+	public static final String VERSION = "1.6.0";
 	public static final String VERS = "[1.12, 1.13)";
 	public static final String DEPS = "required-after:placebo@[1.2.0,)";
+	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	public static final KeyBinding CLEAR = new KeyBinding("key.toastcontrol.clear", Keyboard.KEY_J, "key.toastcontrol.category");
 	public static final ResourceLocation TRANSLUCENT = new ResourceLocation(MODID, "textures/gui/toasts.png");
@@ -47,6 +50,7 @@ public class ToastControl {
 		Minecraft.getMinecraft().toastGui = new BetterGuiToast();
 		MinecraftForge.EVENT_BUS.register(this);
 		handleToastReloc();
+		handleBlockedClasses();
 		ClientRegistry.registerKeyBinding(CLEAR);
 	}
 
@@ -60,6 +64,20 @@ public class ToastControl {
 	private static void change(ResourceLocation a, ResourceLocation b) {
 		ReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getResourceDomain(), "resourceDomain", "field_110626_a");
 		ReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getResourcePath(), "resourcePath", "field_110625_b");
+	}
+	
+	public static final List<Class<?>> BLOCKED_CLASSES = new ArrayList<>();
+	
+	private static void handleBlockedClasses() {
+		BLOCKED_CLASSES.clear();
+		for(String s : ToastControlConfig.blockedClasses) {
+			try {
+				Class<?> c = Class.forName(s);
+				BLOCKED_CLASSES.add(c);
+			} catch (ClassNotFoundException e) {
+				LOGGER.error("Invalid class string provided to toast control: " + s);
+			}
+		}
 	}
 
 	public static List<ToastInstance> tracker = new ArrayList<>();
@@ -75,7 +93,9 @@ public class ToastControl {
 		if (event.getModID().equals(ToastControl.MODID)) {
 			ConfigManager.sync(ToastControl.MODID, Config.Type.INSTANCE);
 			handleToastReloc();
+			handleBlockedClasses();
 			((BetterGuiToast) Minecraft.getMinecraft().toastGui).visible = new ToastInstance[ToastControlConfig.toastCount];
+			LOGGER.info("Toast control config reloaded.");
 		}
 	}
 
@@ -126,6 +146,14 @@ public class ToastControl {
 		@Config.Comment("The maximum number of toasts on the screen at once.  Default 3, Vanilla uses 5.")
 		@Config.RangeInt(min = 1, max = 7)
 		public static int toastCount = 3;
+		
+		@Config.Name("Print Toast Classnames")
+		@Config.Comment("A debug config to print the class of each toast that tries to enter the GUI.  Useful for finding classes to block.")
+		public static boolean printClasses = false;
+		
+		@Config.Name("Blacklisted Classes")
+		@Config.Comment("A Class-specific blacklist for toasts.  Insert class names.")
+		public static String[] blockedClasses = new String[0];
 	}
 
 }

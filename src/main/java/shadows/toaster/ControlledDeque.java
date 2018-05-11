@@ -14,9 +14,11 @@ public class ControlledDeque extends BlockedDeque<IToast> {
 
 	@Override
 	public boolean isBlocked(IToast toast) {
+		if (ToastControlConfig.printClasses) ToastControl.LOGGER.info(toast.getClass());
 		if (ToastControlConfig.global) return true;
 		if (ToastControlConfig.globalVanilla && isVanillaToast(toast)) return true;
 		if (ToastControlConfig.globalModded && !isVanillaToast(toast)) return true;
+		if (ToastControl.BLOCKED_CLASSES.contains(toast.getClass())) return true;
 		return (toast instanceof AdvancementToast && ToastControlConfig.advancements) || (toast instanceof RecipeToast && ToastControlConfig.recipes) || (toast instanceof SystemToast && ToastControlConfig.system) || (toast instanceof TutorialToast && ToastControlConfig.tutorial);
 	}
 
