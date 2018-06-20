@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.toasts.GuiToast.ToastInstance;
 import net.minecraft.client.gui.toasts.IToast;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
@@ -23,14 +24,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import shadows.toaster.BetterGuiToast.ToastInstance;
+import shadows.toaster.BetterGuiToast.BetterToastInstance;
 
 @Mod(modid = ToastControl.MODID, version = ToastControl.VERSION, name = ToastControl.MODNAME, acceptedMinecraftVersions = ToastControl.VERS, clientSideOnly = true, dependencies = ToastControl.DEPS)
 public class ToastControl {
 
 	public static final String MODID = "toastcontrol";
 	public static final String MODNAME = "Toast Control";
-	public static final String VERSION = "1.6.0";
+	public static final String VERSION = "1.7.0";
 	public static final String VERS = "[1.12, 1.13)";
 	public static final String DEPS = "required-after:placebo@[1.2.0,)";
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
@@ -80,11 +81,11 @@ public class ToastControl {
 		}
 	}
 
-	public static List<ToastInstance> tracker = new ArrayList<>();
+	public static List<BetterToastInstance<?>> tracker = new ArrayList<>();
 
 	@SubscribeEvent
 	public void clientTick(ClientTickEvent e) {
-		for (ToastInstance t : tracker)
+		for (BetterToastInstance<?> t : tracker)
 			t.tick();
 	}
 

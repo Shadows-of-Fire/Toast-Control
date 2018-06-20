@@ -2,8 +2,6 @@ package shadows.toaster;
 
 import java.util.Arrays;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.toasts.GuiToast;
@@ -15,11 +13,10 @@ import shadows.toaster.ToastControl.ToastControlConfig;
 
 public class BetterGuiToast extends GuiToast {
 
-	public ToastInstance[] visible = new ToastInstance[ToastControlConfig.toastCount];
-
 	public BetterGuiToast() {
 		super(Minecraft.getMinecraft());
 		this.toastsQueue = new ControlledDeque();
+		this.visible = new BetterToastInstance[ToastControlConfig.toastCount];
 	}
 
 	@Override
@@ -28,31 +25,17 @@ public class BetterGuiToast extends GuiToast {
 			RenderHelper.disableStandardItemLighting();
 
 			for (int i = 0; i < this.visible.length; ++i) {
-				ToastInstance toastinstance = this.visible[i];
+				ToastInstance<?> toastinstance = this.visible[i];
 
 				if (toastinstance != null && toastinstance.render(resolution.getScaledWidth(), i)) {
 					this.visible[i] = null;
 				}
 
 				if (this.visible[i] == null && !this.toastsQueue.isEmpty()) {
-					this.visible[i] = new ToastInstance(this.toastsQueue.removeFirst());
+					this.visible[i] = new BetterToastInstance<>(this.toastsQueue.removeFirst());
 				}
 			}
 		}
-	}
-
-	@Override
-	@Nullable
-	public <T extends IToast> T getToast(Class<? extends T> toastClass, Object type) {
-		for (ToastInstance toastinstance : this.visible) {
-			if (toastinstance != null && toastClass.isAssignableFrom(toastinstance.getToast().getClass()) && toastinstance.getToast().getType().equals(type)) return toastClass.cast(toastinstance.getToast());
-		}
-
-		for (IToast itoast : this.toastsQueue) {
-			if (toastClass.isAssignableFrom(itoast.getClass()) && itoast.getType().equals(type)) return toastClass.cast(itoast);
-		}
-
-		return null;
 	}
 
 	@Override
@@ -61,20 +44,13 @@ public class BetterGuiToast extends GuiToast {
 		this.toastsQueue.clear();
 	}
 
-	public class ToastInstance {
-		protected final IToast toast;
-		protected long animationTime = -1L;
-		protected long visibleTime = -1L;
+	public class BetterToastInstance<T extends IToast> extends ToastInstance<T> {
+
 		protected int forcedShowTime = 0;
-		protected IToast.Visibility visibility = IToast.Visibility.SHOW;
 
-		protected ToastInstance(IToast toast) {
-			this.toast = toast;
+		protected BetterToastInstance(T toast) {
+			super(toast);
 			ToastControl.tracker.add(this);
-		}
-
-		public IToast getToast() {
-			return this.toast;
 		}
 
 		public void tick() {
@@ -87,6 +63,7 @@ public class BetterGuiToast extends GuiToast {
 			return this.forcedShowTime > ToastControlConfig.forceTime && this.visibility == IToast.Visibility.HIDE ? 1F - f : f;
 		}
 
+		@Override
 		public boolean render(int scaledWidth, int arrayPos) {
 			long i = Minecraft.getSystemTime();
 
@@ -102,7 +79,7 @@ public class BetterGuiToast extends GuiToast {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
 			GlStateManager.enableBlend();
-			IToast.Visibility itoast$visibility = this.toast.draw(BetterGuiToast.this, i - this.visibleTime);
+			IToast.Visibility itoast$visibility = toast.draw(BetterGuiToast.this, i - this.visibleTime);
 			GlStateManager.disableBlend();
 			GlStateManager.popMatrix();
 
