@@ -63,8 +63,8 @@ public class ToastControl {
 	}
 
 	private static void change(ResourceLocation a, ResourceLocation b) {
-		ReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getResourceDomain(), "resourceDomain", "field_110626_a");
-		ReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getResourcePath(), "resourcePath", "field_110625_b");
+		ReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getNamespace(), "namespace", "field_110626_a");
+		ReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getPath(), "path", "field_110625_b");
 	}
 	
 	public static final List<Class<?>> BLOCKED_CLASSES = new ArrayList<>();
