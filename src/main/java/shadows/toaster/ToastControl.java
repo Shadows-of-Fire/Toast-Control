@@ -167,6 +167,10 @@ public class ToastControl {
 		@Config.Name("Disable Transitions")
 		@Config.Comment("Set to true to disable toasts sliding in to view.")
 		public static boolean noSlide = false;
+
+		@Config.Name("Transition from Left")
+		@Config.Comment("Set to true to change the transition to start from the left.")
+		public static boolean startLeft = false;
 	}
 
 }

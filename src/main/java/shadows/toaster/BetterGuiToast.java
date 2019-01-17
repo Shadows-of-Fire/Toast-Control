@@ -78,7 +78,8 @@ public class BetterGuiToast extends GuiToast {
 			}
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
+			if (ToastControlConfig.startLeft) GlStateManager.translate(-160 + 160 * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
+			else GlStateManager.translate(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
 			GlStateManager.enableBlend();
 			GlStateManager.translate(ToastControlConfig.offsetX, ToastControlConfig.offsetY, 0);
 			IToast.Visibility itoast$visibility = toast.draw(BetterGuiToast.this, i - this.visibleTime);
