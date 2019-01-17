@@ -60,6 +60,7 @@ public class BetterGuiToast extends GuiToast {
 		protected float getVisibility(long sysTime) {
 			float f = MathHelper.clamp((sysTime - this.animationTime) / 600F, 0F, 1F);
 			f = f * f;
+			if (ToastControlConfig.noSlide) return 1;
 			return this.forcedShowTime > ToastControlConfig.forceTime && this.visibility == IToast.Visibility.HIDE ? 1F - f : f;
 		}
 
@@ -79,6 +80,7 @@ public class BetterGuiToast extends GuiToast {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
 			GlStateManager.enableBlend();
+			GlStateManager.translate(ToastControlConfig.offsetX, ToastControlConfig.offsetY, 0);
 			IToast.Visibility itoast$visibility = toast.draw(BetterGuiToast.this, i - this.visibleTime);
 			GlStateManager.disableBlend();
 			GlStateManager.popMatrix();

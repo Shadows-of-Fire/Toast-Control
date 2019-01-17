@@ -31,9 +31,9 @@ public class ToastControl {
 
 	public static final String MODID = "toastcontrol";
 	public static final String MODNAME = "Toast Control";
-	public static final String VERSION = "1.7.1";
+	public static final String VERSION = "1.8.0";
 	public static final String VERS = "[1.12, 1.13)";
-	public static final String DEPS = "required-after:placebo@[1.4.1,)";
+	public static final String DEPS = "required-after:placebo@[1.5.1,)";
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	public static final KeyBinding CLEAR = new KeyBinding("key.toastcontrol.clear", Keyboard.KEY_J, "key.toastcontrol.category");
@@ -66,12 +66,12 @@ public class ToastControl {
 		ReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getNamespace(), "namespace", "field_110626_a");
 		ReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getPath(), "path", "field_110625_b");
 	}
-	
+
 	public static final List<Class<?>> BLOCKED_CLASSES = new ArrayList<>();
-	
+
 	private static void handleBlockedClasses() {
 		BLOCKED_CLASSES.clear();
-		for(String s : ToastControlConfig.blockedClasses) {
+		for (String s : ToastControlConfig.blockedClasses) {
 			try {
 				Class<?> c = Class.forName(s);
 				BLOCKED_CLASSES.add(c);
@@ -147,14 +147,26 @@ public class ToastControl {
 		@Config.Comment("The maximum number of toasts on the screen at once.  Default 3, Vanilla uses 5.")
 		@Config.RangeInt(min = 1, max = 7)
 		public static int toastCount = 3;
-		
+
 		@Config.Name("Print Toast Classnames")
 		@Config.Comment("A debug config to print the class of each toast that tries to enter the GUI.  Useful for finding classes to block.")
 		public static boolean printClasses = false;
-		
+
 		@Config.Name("Blacklisted Classes")
 		@Config.Comment("A Class-specific blacklist for toasts.  Insert class names.")
 		public static String[] blockedClasses = new String[0];
+
+		@Config.Name("Toast X Offset")
+		@Config.Comment("The amount to offset a toast in the x axis.")
+		public static int offsetX = 0;
+
+		@Config.Name("Toast Y Offset")
+		@Config.Comment("The amount to offset a toast in the y axis.")
+		public static int offsetY = 0;
+
+		@Config.Name("Disable Transitions")
+		@Config.Comment("Set to true to disable toasts sliding in to view.")
+		public static boolean noSlide = false;
 	}
 
 }
