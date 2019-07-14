@@ -2,32 +2,32 @@ package shadows.toaster;
 
 import java.util.Arrays;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.toasts.GuiToast;
-import net.minecraft.client.gui.toasts.IToast;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.math.MathHelper;
-import shadows.toaster.ToastControl.ToastControlConfig;
+import com.mojang.blaze3d.platform.GlStateManager;
 
-public class BetterGuiToast extends GuiToast {
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.toasts.IToast;
+import net.minecraft.client.gui.toasts.ToastGui;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
+
+public class BetterGuiToast extends ToastGui {
 
 	public BetterGuiToast() {
-		super(Minecraft.getMinecraft());
+		super(Minecraft.getInstance());
 		this.toastsQueue = new ControlledDeque();
-		this.visible = new BetterToastInstance[ToastControlConfig.toastCount];
+		this.visible = new BetterToastInstance[ToastConfig.INSTANCE.toastCount.get()];
 	}
 
 	@Override
-	public void drawToast(ScaledResolution resolution) {
+	public void render() {
 		if (!this.mc.gameSettings.hideGUI) {
 			RenderHelper.disableStandardItemLighting();
 
 			for (int i = 0; i < this.visible.length; ++i) {
 				ToastInstance<?> toastinstance = this.visible[i];
 
-				if (toastinstance != null && toastinstance.render(resolution.getScaledWidth(), i)) {
+				if (toastinstance != null && toastinstance.render(this.mc.mainWindow.getScaledWidth(), i)) {
 					this.visible[i] = null;
 				}
 
@@ -60,13 +60,13 @@ public class BetterGuiToast extends GuiToast {
 		protected float getVisibility(long sysTime) {
 			float f = MathHelper.clamp((sysTime - this.animationTime) / 600F, 0F, 1F);
 			f = f * f;
-			if (ToastControlConfig.noSlide) return 1;
-			return this.forcedShowTime > ToastControlConfig.forceTime && this.visibility == IToast.Visibility.HIDE ? 1F - f : f;
+			if (ToastConfig.INSTANCE.noSlide.get()) return 1;
+			return this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && this.visibility == IToast.Visibility.HIDE ? 1F - f : f;
 		}
 
 		@Override
 		public boolean render(int scaledWidth, int arrayPos) {
-			long i = Minecraft.getSystemTime();
+			long i = Util.milliTime();
 
 			if (this.animationTime == -1L) {
 				this.animationTime = i;
@@ -78,23 +78,23 @@ public class BetterGuiToast extends GuiToast {
 			}
 
 			GlStateManager.pushMatrix();
-			if (ToastControlConfig.startLeft) GlStateManager.translate(-160 + 160 * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
-			else GlStateManager.translate(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
+			if (ToastConfig.INSTANCE.startLeft.get()) GlStateManager.translatef(-160 + 160 * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
+			else GlStateManager.translatef(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
 			GlStateManager.enableBlend();
-			GlStateManager.translate(ToastControlConfig.offsetX, ToastControlConfig.offsetY, 0);
+			GlStateManager.translatef(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);
 			IToast.Visibility itoast$visibility = toast.draw(BetterGuiToast.this, i - this.visibleTime);
 			GlStateManager.disableBlend();
 			GlStateManager.popMatrix();
 
-			if (this.forcedShowTime > ToastControlConfig.forceTime && itoast$visibility != this.visibility) {
+			if (this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && itoast$visibility != this.visibility) {
 				this.animationTime = i - ((long) ((1 - this.getVisibility(i)) * 600));
 				this.visibility = itoast$visibility;
 				this.visibility.playSound(BetterGuiToast.this.mc.getSoundHandler());
 			}
 
-			if (this.forcedShowTime > ToastControlConfig.forceTime) ToastControl.tracker.remove(this);
+			if (this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get()) ToastControl.tracker.remove(this);
 
-			return this.forcedShowTime > ToastControlConfig.forceTime && this.visibility == IToast.Visibility.HIDE && i - this.animationTime > 600L;
+			return this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && this.visibility == IToast.Visibility.HIDE && i - this.animationTime > 600L;
 		}
 	}
 
