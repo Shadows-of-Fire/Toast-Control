@@ -11,9 +11,9 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = '2.0.1'
+version = '2.1.0'
 group = 'shadows.toaster'
-archivesBaseName = 'ToastControl-1.14.3'
+archivesBaseName = 'ToastControl-1.14.4'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
@@ -37,7 +37,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.3-27.0.43'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.13'
 	compile fileTree(dir: 'libs', include: '*.jar')
 }
 

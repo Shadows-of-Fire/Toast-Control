@@ -3,7 +3,6 @@ package shadows.toaster;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
@@ -11,45 +10,24 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.toasts.IToast;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import shadows.placebo.util.ReflectionHelper;
 import shadows.toaster.BetterGuiToast.BetterToastInstance;
 
-@Mod(ToastControl.MODID)
 public class ToastControl {
 
-	public static final String MODID = "toastcontrol";
-	public static final Logger LOGGER = LogManager.getLogger(MODID);
-
-	static {
-		if (FMLEnvironment.dist != Dist.CLIENT) {
-			LOGGER.error("Toast Control is a client-side only mod.  Loading on a dedicated server is not supported.");
-			throw new RuntimeException("Toast Control cannot load on a dedicated server.");
-		}
-	}
-
+	public static final String MODID = ToastLoader.MODID;
+	public static final Logger LOGGER = ToastLoader.LOGGER;
 	public static final KeyBinding CLEAR = new KeyBinding("key.toastcontrol.clear", GLFW.GLFW_KEY_J, "key.toastcontrol.category");
 	public static final ResourceLocation TRANSLUCENT = new ResourceLocation(MODID, "textures/gui/toasts.png");
 	public static final ResourceLocation TRANSPARENT = new ResourceLocation(MODID, "textures/gui/toasts2.png");
 	public static final ResourceLocation ORIGINAL = new ResourceLocation("textures/gui/toasts.png");
-
-	public ToastControl() {
-		FMLJavaModLoadingContext.get().getModEventBus().register(this);
-		MinecraftForge.EVENT_BUS.register(this);
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ToastConfig.SPEC);
-	}
 
 	@SubscribeEvent
 	public void keys(KeyInputEvent e) {
