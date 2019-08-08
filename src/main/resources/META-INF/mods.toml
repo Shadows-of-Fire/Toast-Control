@@ -19,7 +19,7 @@ Blocking annoying popups since 1.12
 [[dependencies.toastcontrol]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[28,)" #mandatory
+    versionRange="[28.0.45,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
@@ -33,6 +33,6 @@ Blocking annoying popups since 1.12
 [[dependencies.toastcontrol]]
     modId="placebo"
     mandatory=true
-    versionRange="[2.1.0,)"
+    versionRange="[2.1.4,)"
     ordering="NONE"
     side="BOTH"
