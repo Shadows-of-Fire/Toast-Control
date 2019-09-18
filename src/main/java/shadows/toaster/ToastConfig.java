@@ -47,7 +47,7 @@ public class ToastConfig {
 	public final BooleanValue printClasses;
 
 	public ToastConfig(ForgeConfigSpec.Builder build) {
-		build.comment("Server configuration").push("client").push("blocked_toasts");
+		build.comment("Client Configuration").push("client").push("blocked_toasts");
 
 		advancements = build.comment("If advancement toasts are blocked.").define("advancements", true);
 		recipes = build.comment("If recipe toasts are blocked.").define("recipes", true);
