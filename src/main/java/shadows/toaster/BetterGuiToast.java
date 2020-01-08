@@ -2,7 +2,7 @@ package shadows.toaster;
 
 import java.util.Arrays;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.toasts.IToast;
@@ -27,7 +27,7 @@ public class BetterGuiToast extends ToastGui {
 			for (int i = 0; i < this.visible.length; ++i) {
 				ToastInstance<?> toastinstance = this.visible[i];
 
-				if (toastinstance != null && toastinstance.render(this.mc.mainWindow.getScaledWidth(), i)) {
+				if (toastinstance != null && toastinstance.render(this.mc.getWindow().getScaledWidth(), i)) {
 					this.visible[i] = null;
 				}
 
@@ -77,14 +77,14 @@ public class BetterGuiToast extends ToastGui {
 				this.visibleTime = i;
 			}
 
-			GlStateManager.pushMatrix();
-			if (ToastConfig.INSTANCE.startLeft.get()) GlStateManager.translatef(-160 + 160 * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
-			else GlStateManager.translatef(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
-			GlStateManager.enableBlend();
-			GlStateManager.translatef(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);
+			RenderSystem.pushMatrix();
+			if (ToastConfig.INSTANCE.startLeft.get()) RenderSystem.translatef(-160 + 160 * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
+			else RenderSystem.translatef(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
+			RenderSystem.enableBlend();
+			RenderSystem.translatef(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);
 			IToast.Visibility itoast$visibility = toast.draw(BetterGuiToast.this, i - this.visibleTime);
-			GlStateManager.disableBlend();
-			GlStateManager.popMatrix();
+			RenderSystem.disableBlend();
+			RenderSystem.popMatrix();
 
 			if (this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && itoast$visibility != this.visibility) {
 				this.animationTime = i - ((long) ((1 - this.getVisibility(i)) * 600));
