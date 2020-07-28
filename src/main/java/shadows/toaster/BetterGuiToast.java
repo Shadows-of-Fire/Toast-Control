@@ -65,6 +65,7 @@ public class BetterGuiToast extends ToastGui {
 			return this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && this.visibility == IToast.Visibility.HIDE ? 1F - f : f;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public boolean render(int scaledWidth, int arrayPos, MatrixStack stack) {
 			long i = Util.milliTime();
@@ -78,14 +79,14 @@ public class BetterGuiToast extends ToastGui {
 				this.visibleTime = i;
 			}
 
-			stack.push();
-			if (ToastConfig.INSTANCE.startLeft.get()) stack.translate(-160 + 160 * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
-			else stack.translate(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
+			RenderSystem.pushMatrix();
+			if (ToastConfig.INSTANCE.startLeft.get()) RenderSystem.translatef(-160 + 160 * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
+			else RenderSystem.translatef(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
 			RenderSystem.enableBlend();
-			stack.translate(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);
+			RenderSystem.translatef(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);
 			IToast.Visibility itoast$visibility = toast.func_230444_a_(stack, BetterGuiToast.this, i - this.visibleTime);
 			RenderSystem.disableBlend();
-			stack.pop();
+			RenderSystem.popMatrix();
 
 			if (this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && itoast$visibility != this.visibility) {
 				this.animationTime = i - ((long) ((1 - this.getVisibility(i)) * 600));
