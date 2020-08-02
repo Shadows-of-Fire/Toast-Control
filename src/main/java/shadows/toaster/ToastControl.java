@@ -30,17 +30,27 @@ public class ToastControl {
 	public static final ResourceLocation ORIGINAL = new ResourceLocation("textures/gui/toasts.png");
 
 	@SubscribeEvent
-	public void keys(KeyInputEvent e) {
-		if (CLEAR.isKeyDown() && CLEAR.isPressed()) Minecraft.getInstance().getToastGui().clear();
-	}
-
-	@SubscribeEvent
 	public void preInit(FMLClientSetupEvent e) {
 		Minecraft.getInstance().toastGui = new BetterGuiToast();
-		MinecraftForge.EVENT_BUS.register(this);
+		registerEventBusListeners();
 		handleToastReloc();
 		handleBlockedClasses();
 		ClientRegistry.registerKeyBinding(CLEAR);
+	}
+
+	private void registerEventBusListeners() {
+		MinecraftForge.EVENT_BUS.register(new Object(){
+			@SubscribeEvent
+			public void keys(KeyInputEvent e) {
+				if (CLEAR.isKeyDown() && CLEAR.isPressed()) Minecraft.getInstance().getToastGui().clear();
+			}
+
+			@SubscribeEvent
+			public void clientTick(ClientTickEvent e) {
+				if (e.phase == Phase.END) for (BetterToastInstance<?> t : tracker)
+					t.tick();
+			}
+		});
 	}
 
 	static void handleToastReloc() {
@@ -70,11 +80,4 @@ public class ToastControl {
 	}
 
 	public static List<BetterToastInstance<?>> tracker = new ArrayList<>();
-
-	@SubscribeEvent
-	public void clientTick(ClientTickEvent e) {
-		if (e.phase == Phase.END) for (BetterToastInstance<?> t : tracker)
-			t.tick();
-	}
-
 }

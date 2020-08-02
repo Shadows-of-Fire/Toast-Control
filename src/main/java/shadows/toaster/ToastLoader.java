@@ -21,7 +21,6 @@ public class ToastLoader {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			ToastControl mod = new ToastControl();
 			FMLJavaModLoadingContext.get().getModEventBus().register(mod);
-			MinecraftForge.EVENT_BUS.register(mod);
 			MinecraftForge.EVENT_BUS.register(ToastConfig.class);
 			ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ToastConfig.SPEC);
 		} else LOGGER.error("Running on a dedicated server, disabling mod.");
