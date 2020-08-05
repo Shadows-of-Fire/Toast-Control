@@ -34,7 +34,6 @@ public class ToastControl {
 		if (CLEAR.isKeyDown() && CLEAR.isPressed()) Minecraft.getInstance().getToastGui().clear();
 	}
 
-	@SubscribeEvent
 	public void preInit(FMLClientSetupEvent e) {
 		Minecraft.getInstance().toastGui = new BetterGuiToast();
 		MinecraftForge.EVENT_BUS.register(this);
