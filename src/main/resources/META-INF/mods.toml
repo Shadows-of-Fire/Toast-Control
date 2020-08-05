@@ -12,6 +12,8 @@ version="${file.jarVersion}" #mandatory
 
 displayName="Toast Control" #mandatory
 
+license="MIT License" #mandatory
+
 description='''
 Blocking annoying popups since 1.12
 '''
@@ -19,20 +21,20 @@ Blocking annoying popups since 1.12
 [[dependencies.toastcontrol]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[32,)" #mandatory
+    versionRange="[32.0.106,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.toastcontrol]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16,)"
+    versionRange="[1.16.1,)"
     ordering="NONE"
     side="BOTH"
 	
 [[dependencies.toastcontrol]]
     modId="placebo"
     mandatory=true
-    versionRange="[4.0.1,)"
+    versionRange="[4.1,)"
     ordering="NONE"
     side="BOTH"

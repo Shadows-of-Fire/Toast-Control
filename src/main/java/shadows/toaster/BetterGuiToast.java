@@ -21,14 +21,14 @@ public class BetterGuiToast extends ToastGui {
 	}
 
 	@Override
-	public void func_238541_a_(MatrixStack stack) {
+	public void draw(MatrixStack stack) {
 		if (!this.mc.gameSettings.hideGUI) {
 			RenderHelper.disableStandardItemLighting();
 
 			for (int i = 0; i < this.visible.length; ++i) {
 				ToastInstance<?> toastinstance = this.visible[i];
 
-				if (toastinstance != null && toastinstance.render(this.mc.getMainWindow().getScaledWidth(), i, stack)) {
+				if (toastinstance != null && toastinstance.render(this.mc.getWindow().getScaledWidth(), i, stack)) {
 					this.visible[i] = null;
 				}
 
@@ -84,7 +84,7 @@ public class BetterGuiToast extends ToastGui {
 			else RenderSystem.translatef(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
 			RenderSystem.enableBlend();
 			RenderSystem.translatef(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);
-			IToast.Visibility itoast$visibility = toast.func_230444_a_(stack, BetterGuiToast.this, i - this.visibleTime);
+			IToast.Visibility itoast$visibility = toast.draw(stack, BetterGuiToast.this, i - this.visibleTime);
 			RenderSystem.disableBlend();
 			RenderSystem.popMatrix();
 
