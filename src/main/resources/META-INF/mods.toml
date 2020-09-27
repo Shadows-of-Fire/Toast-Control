@@ -21,20 +21,20 @@ Blocking annoying popups since 1.12
 [[dependencies.toastcontrol]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[33.0.22,)" #mandatory
+    versionRange="[34.1,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.toastcontrol]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.2,)"
+    versionRange="[1.16.3,)"
     ordering="NONE"
     side="BOTH"
 	
 [[dependencies.toastcontrol]]
     modId="placebo"
     mandatory=true
-    versionRange="[4.2,)"
+    versionRange="[4.3,)"
     ordering="NONE"
     side="BOTH"
