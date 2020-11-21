@@ -159,10 +159,18 @@ public class ToastControl {
 		@Config.Name("Toast X Offset")
 		@Config.Comment("The amount to offset a toast in the x axis.")
 		public static int offsetX = 0;
+		
+		@Config.Name("Toast X Percentage")
+		@Config.Comment("Whether the Toast X Offset is a percentage out of 100.")
+		public static boolean percentageX = false;
 
 		@Config.Name("Toast Y Offset")
 		@Config.Comment("The amount to offset a toast in the y axis.")
 		public static int offsetY = 0;
+		
+		@Config.Name("Toast Y Percentage")
+		@Config.Comment("Whether the Toast Y Offset is a percentage out of 100.")
+		public static boolean percentageY = false;
 
 		@Config.Name("Disable Transitions")
 		@Config.Comment("Set to true to disable toasts sliding in to view.")
