@@ -27,7 +27,7 @@ public class BetterGuiToast extends GuiToast {
 			for (int i = 0; i < this.visible.length; ++i) {
 				ToastInstance<?> toastinstance = this.visible[i];
 
-				if (toastinstance != null && toastinstance.render(resolution.getScaledWidth(), i)) {
+				if (toastinstance != null && toastinstance.render(resolution.getScaledWidth(), resolution.getScaledHeight(), i)) {
 					this.visible[i] = null;
 				}
 
@@ -66,6 +66,10 @@ public class BetterGuiToast extends GuiToast {
 
 		@Override
 		public boolean render(int scaledWidth, int arrayPos) {
+			return render(scaledWidth, -1, arrayPos);
+		}
+		
+		public boolean render(int scaledWidth, int scaledHeight, int arrayPos) {
 			long i = Minecraft.getSystemTime();
 
 			if (this.animationTime == -1L) {
@@ -81,7 +85,7 @@ public class BetterGuiToast extends GuiToast {
 			if (ToastControlConfig.startLeft) GlStateManager.translate(-160 + 160 * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
 			else GlStateManager.translate(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
 			GlStateManager.enableBlend();
-			GlStateManager.translate(ToastControlConfig.offsetX, ToastControlConfig.offsetY, 0);
+			GlStateManager.translate(ToastControlConfig.percentageX ? scaledWidth * 0.01 * ToastControlConfig.offsetX : ToastControlConfig.offsetX, ToastControlConfig.percentageY && scaledHeight != -1 ? scaledHeight * 0.01 * ToastControlConfig.offsetY : ToastControlConfig.offsetY, 0);
 			IToast.Visibility itoast$visibility = toast.draw(BetterGuiToast.this, i - this.visibleTime);
 			GlStateManager.disableBlend();
 			GlStateManager.popMatrix();
