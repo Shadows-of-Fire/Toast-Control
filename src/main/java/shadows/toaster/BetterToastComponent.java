@@ -5,30 +5,28 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.Iterator;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.toasts.IToast;
-import net.minecraft.client.gui.toasts.ToastGui;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.components.toasts.Toast;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.util.Mth;
 
-public class BetterGuiToast extends ToastGui {
+public class BetterToastComponent extends ToastComponent {
 
 	private Deque<ToastInstance<?>> topDownList = new ArrayDeque<>();
 
-	public BetterGuiToast() {
+	public BetterToastComponent() {
 		super(Minecraft.getInstance());
 		this.queued = new ControlledDeque();
 		this.visible = new BetterToastInstance[ToastConfig.INSTANCE.toastCount.get()];
 	}
 
 	@Override
-	public void render(MatrixStack stack) {
+	public void render(PoseStack stack) {
 		if (!this.minecraft.options.hideGui) {
-			RenderHelper.turnOff();
 
 			for (int i = 0; i < this.visible.length; ++i) {
 				ToastInstance<?> toastinstance = this.visible[i];
@@ -53,7 +51,7 @@ public class BetterGuiToast extends ToastGui {
 		this.queued.clear();
 	}
 
-	public class BetterToastInstance<T extends IToast> extends ToastInstance<T> {
+	public class BetterToastInstance<T extends Toast> extends ToastInstance<T> {
 
 		protected int forcedShowTime = 0;
 
@@ -67,28 +65,28 @@ public class BetterGuiToast extends ToastGui {
 		}
 
 		protected float getVisibility(long sysTime) {
-			float f = MathHelper.clamp((sysTime - this.animationTime) / 600F, 0F, 1F);
+			float f = Mth.clamp((sysTime - this.animationTime) / 600F, 0F, 1F);
 			f = f * f;
 			if (ToastConfig.INSTANCE.noSlide.get()) return 1;
-			return this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && this.visibility == IToast.Visibility.HIDE ? 1F - f : f;
+			return this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && this.visibility == Toast.Visibility.HIDE ? 1F - f : f;
 		}
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public boolean render(int scaledWidth, int arrayPos, MatrixStack stack) {
+		public boolean render(int scaledWidth, int arrayPos, PoseStack pStack) {
 			long i = Util.getMillis();
 
 			if (this.animationTime == -1L) {
 				this.animationTime = i;
-				this.visibility.playSound(BetterGuiToast.this.minecraft.getSoundManager());
+				this.visibility.playSound(BetterToastComponent.this.minecraft.getSoundManager());
 			}
 
-			if (this.visibility == IToast.Visibility.SHOW && i - this.animationTime <= 600L) {
+			if (this.visibility == Toast.Visibility.SHOW && i - this.animationTime <= 600L) {
 				this.visibleTime = i;
 			}
 
-			RenderSystem.pushMatrix();
-
+			PoseStack stack = RenderSystem.getModelViewStack();
+			stack.pushPose();
 			if (ToastConfig.INSTANCE.topDown.get()) {
 				int trueIdx = 0;
 				Iterator<ToastInstance<?>> it = topDownList.iterator();
@@ -96,19 +94,19 @@ public class BetterGuiToast extends ToastGui {
 					if (it.next() == this) break;
 					trueIdx++;
 				}
-				RenderSystem.translatef(scaledWidth - 160F, (trueIdx - 1) * 32 + 32 * this.getVisibility(i), 500 + arrayPos);
-			} else if (ToastConfig.INSTANCE.startLeft.get()) RenderSystem.translatef(-160 + 160 * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
-			else RenderSystem.translatef(scaledWidth - 160F * this.getVisibility(i), arrayPos * 32, 500 + arrayPos);
-			RenderSystem.enableBlend();
-			RenderSystem.translatef(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);
-			IToast.Visibility itoast$visibility = toast.render(stack, BetterGuiToast.this, i - this.visibleTime);
-			RenderSystem.disableBlend();
-			RenderSystem.popMatrix();
+				stack.translate(scaledWidth - this.toast.width(), (trueIdx - 1) * this.toast.height() + this.toast.height() * this.getVisibility(i), 800 + arrayPos);
+			} else if (ToastConfig.INSTANCE.startLeft.get()) stack.translate(-this.toast.width() + this.toast.width() * this.getVisibility(i), arrayPos * this.toast.height(), 800 + arrayPos);
+			else stack.translate(scaledWidth - this.toast.width() * this.getVisibility(i), arrayPos * this.toast.height(), 800 + arrayPos);
+			stack.translate(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);
+			RenderSystem.applyModelViewMatrix();
+			Toast.Visibility itoast$visibility = toast.render(pStack, BetterToastComponent.this, i - this.visibleTime);
+			stack.popPose();
+			RenderSystem.applyModelViewMatrix();
 
 			if (this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && itoast$visibility != this.visibility) {
 				this.animationTime = i - ((long) ((1 - this.getVisibility(i)) * 600));
 				this.visibility = itoast$visibility;
-				this.visibility.playSound(BetterGuiToast.this.minecraft.getSoundManager());
+				this.visibility.playSound(BetterToastComponent.this.minecraft.getSoundManager());
 				if (ToastConfig.INSTANCE.topDown.get()) {
 					ToastControl.tracker.remove(this);
 					return true;
@@ -117,7 +115,7 @@ public class BetterGuiToast extends ToastGui {
 
 			if (this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get()) ToastControl.tracker.remove(this);
 
-			return this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && this.visibility == IToast.Visibility.HIDE && i - this.animationTime > 600L;
+			return this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && this.visibility == Toast.Visibility.HIDE && i - this.animationTime > 600L;
 		}
 	}
 

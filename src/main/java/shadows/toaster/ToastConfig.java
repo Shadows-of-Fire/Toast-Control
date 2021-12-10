@@ -8,13 +8,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Predicates;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.toasts.ToastGui.ToastInstance;
+import net.minecraft.client.gui.components.toasts.ToastComponent.ToastInstance;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 public class ToastConfig {
 
@@ -76,11 +76,11 @@ public class ToastConfig {
 	}
 
 	@SubscribeEvent
-	public static void onLoad(ModConfig.Loading e) {
+	public static void onLoad(ModConfigEvent.Loading e) {
 		if (e.getConfig().getModId().equals(ToastControl.MODID)) {
 			ToastControl.handleToastReloc();
 			ToastControl.handleBlockedClasses();
-			((BetterGuiToast) Minecraft.getInstance().toast).visible = new ToastInstance[INSTANCE.toastCount.get()];
+			((BetterToastComponent) Minecraft.getInstance().toast).visible = new ToastInstance[INSTANCE.toastCount.get()];
 			ToastControl.LOGGER.info("Toast control config reloaded.");
 		}
 	}
