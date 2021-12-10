@@ -31,11 +31,11 @@ public class ToastControl {
 
 	@SubscribeEvent
 	public void keys(KeyInputEvent e) {
-		if (CLEAR.isKeyDown() && CLEAR.isPressed()) Minecraft.getInstance().getToastGui().clear();
+		if (CLEAR.isDown()) Minecraft.getInstance().getToasts().clear();
 	}
 
 	public void preInit(FMLClientSetupEvent e) {
-		Minecraft.getInstance().toastGui = new BetterGuiToast();
+		Minecraft.getInstance().toast = new BetterGuiToast();
 		MinecraftForge.EVENT_BUS.register(this);
 		handleToastReloc();
 		handleBlockedClasses();
@@ -43,7 +43,7 @@ public class ToastControl {
 	}
 
 	static void handleToastReloc() {
-		ResourceLocation target = IToast.TEXTURE_TOASTS;
+		ResourceLocation target = IToast.TEXTURE;
 		if (ToastConfig.INSTANCE.translucent.get()) change(target, TRANSLUCENT);
 		if (ToastConfig.INSTANCE.transparent.get()) change(target, TRANSPARENT);
 		else if (!ToastConfig.INSTANCE.translucent.get() && !ToastConfig.INSTANCE.transparent.get()) change(target, ORIGINAL);

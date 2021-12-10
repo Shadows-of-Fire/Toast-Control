@@ -43,6 +43,7 @@ public class ToastConfig {
 	public final IntValue offsetY;
 	public final BooleanValue noSlide;
 	public final BooleanValue startLeft;
+	public final BooleanValue topDown;
 
 	public final BooleanValue printClasses;
 
@@ -67,6 +68,7 @@ public class ToastConfig {
 		offsetY = build.comment("The Y offset for toasts to be drawn at.").defineInRange("y_offset", 0, -8192, 8192);
 		noSlide = build.comment("If toasts automatically pop into the screen without animations.").define("no_slide", false);
 		startLeft = build.comment("If toasts show on the left of the screen.").define("start_left", false);
+		topDown = build.comment("If toasts will come in from the top of the screen, rather than the side.").define("top_down", false);
 
 		build.pop().push("debug");
 		printClasses = build.comment("If toast classes are printed when they are shown.").define("print_classes", false);
@@ -78,7 +80,7 @@ public class ToastConfig {
 		if (e.getConfig().getModId().equals(ToastControl.MODID)) {
 			ToastControl.handleToastReloc();
 			ToastControl.handleBlockedClasses();
-			((BetterGuiToast) Minecraft.getInstance().toastGui).visible = new ToastInstance[INSTANCE.toastCount.get()];
+			((BetterGuiToast) Minecraft.getInstance().toast).visible = new ToastInstance[INSTANCE.toastCount.get()];
 			ToastControl.LOGGER.info("Toast control config reloaded.");
 		}
 	}

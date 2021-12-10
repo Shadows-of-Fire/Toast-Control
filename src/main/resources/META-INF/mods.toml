@@ -1,40 +1,31 @@
 modLoader="javafml" #mandatory
 
-loaderVersion="[28,)" #mandatory
+loaderVersion="[32,)" #mandatory
 
-authors="Shadows_of_Fire" #optional
+authors="${author}" #optional
 
 license="MIT License" #mandatory
 
 [[mods]] #mandatory
 
-modId="toastcontrol" #mandatory
+modId="${modid}" #mandatory
 
-version="${file.jarVersion}" #mandatory
+version="${version}" #mandatory
 
-displayName="Toast Control" #mandatory
+displayName="${displayName}" #mandatory
 
-description='''
-Blocking annoying popups since 1.12
-'''
+description='''${desc}'''
 
-[[dependencies.toastcontrol]] #optional
+[[dependencies.${modid}]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[35.1.36,)" #mandatory
+    versionRange="[${forgeVersion},)" #mandatory
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.toastcontrol]]
+[[dependencies.${modid}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.4,)"
-    ordering="NONE"
-    side="BOTH"
-	
-[[dependencies.toastcontrol]]
-    modId="placebo"
-    mandatory=true
-    versionRange="[4.4,)"
+    versionRange="[${mcVersion},)"
     ordering="NONE"
     side="BOTH"
