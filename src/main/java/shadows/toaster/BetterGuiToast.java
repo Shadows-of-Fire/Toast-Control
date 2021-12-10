@@ -40,8 +40,8 @@ public class BetterGuiToast extends ToastGui {
 
 				if (this.visible[i] == null && !this.queued.isEmpty()) {
 					this.visible[i] = new BetterToastInstance<>(this.queued.removeFirst());
-					topDownList.addFirst(this.visible[i]);
 					topDownList.forEach(t -> t.animationTime = -1L);
+					topDownList.addFirst(this.visible[i]);
 				}
 			}
 		}
@@ -109,6 +109,10 @@ public class BetterGuiToast extends ToastGui {
 				this.animationTime = i - ((long) ((1 - this.getVisibility(i)) * 600));
 				this.visibility = itoast$visibility;
 				this.visibility.playSound(BetterGuiToast.this.minecraft.getSoundManager());
+				if (ToastConfig.INSTANCE.topDown.get()) {
+					ToastControl.tracker.remove(this);
+					return true;
+				}
 			}
 
 			if (this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get()) ToastControl.tracker.remove(this);
