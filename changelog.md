@@ -1,3 +1,6 @@
+## 5.0.0
+* Updated to 1.17.1
+
 ## 4.4.0
 * Updated to official mappings and new forge.
 * Fixed toast clearing using the wrong key query method.
