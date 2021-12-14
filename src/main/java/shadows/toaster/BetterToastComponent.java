@@ -33,13 +33,13 @@ public class BetterToastComponent extends ToastComponent {
 
 				if (toastinstance != null && toastinstance.render(this.minecraft.getWindow().getGuiScaledWidth(), i, stack)) {
 					this.visible[i] = null;
-					topDownList.removeLast();
+					this.topDownList.removeLast();
 				}
 
 				if (this.visible[i] == null && !this.queued.isEmpty()) {
 					this.visible[i] = new BetterToastInstance<>(this.queued.removeFirst());
-					topDownList.forEach(t -> t.animationTime = -1L);
-					topDownList.addFirst(this.visible[i]);
+					this.topDownList.forEach(t -> t.animationTime = -1L);
+					this.topDownList.addFirst(this.visible[i]);
 				}
 			}
 		}
@@ -61,7 +61,7 @@ public class BetterToastComponent extends ToastComponent {
 		}
 
 		public void tick() {
-			forcedShowTime++;
+			this.forcedShowTime++;
 		}
 
 		protected float getVisibility(long sysTime) {
@@ -89,7 +89,7 @@ public class BetterToastComponent extends ToastComponent {
 			stack.pushPose();
 			if (ToastConfig.INSTANCE.topDown.get()) {
 				int trueIdx = 0;
-				Iterator<ToastInstance<?>> it = topDownList.iterator();
+				Iterator<ToastInstance<?>> it = BetterToastComponent.this.topDownList.iterator();
 				while (it.hasNext()) {
 					if (it.next() == this) break;
 					trueIdx++;
@@ -99,12 +99,12 @@ public class BetterToastComponent extends ToastComponent {
 			else stack.translate(scaledWidth - this.toast.width() * this.getVisibility(i), arrayPos * this.toast.height(), 800 + arrayPos);
 			stack.translate(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);
 			RenderSystem.applyModelViewMatrix();
-			Toast.Visibility itoast$visibility = toast.render(pStack, BetterToastComponent.this, i - this.visibleTime);
+			Toast.Visibility itoast$visibility = this.toast.render(pStack, BetterToastComponent.this, i - this.visibleTime);
 			stack.popPose();
 			RenderSystem.applyModelViewMatrix();
 
 			if (this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && itoast$visibility != this.visibility) {
-				this.animationTime = i - ((long) ((1 - this.getVisibility(i)) * 600));
+				this.animationTime = i - (long) ((1 - this.getVisibility(i)) * 600);
 				this.visibility = itoast$visibility;
 				this.visibility.playSound(BetterToastComponent.this.minecraft.getSoundManager());
 				if (ToastConfig.INSTANCE.topDown.get()) {
