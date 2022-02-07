@@ -21,18 +21,18 @@ description='''${desc}'''
     mandatory=true #mandatory
     versionRange="[${forgeVersion},)" #mandatory
     ordering="NONE"
-    side="BOTH"
+    side="CLIENT"
 
 [[dependencies.${modid}]]
     modId="minecraft"
     mandatory=true
     versionRange="[${mcVersion},)"
     ordering="NONE"
-    side="BOTH"
+    side="CLIENT"
 
 [[dependencies.${modid}]]
     modId="placebo"
     mandatory=true
-    versionRange="[6.0.1,)"
+    versionRange="[${placeboDep},)"
     ordering="NONE"
-    side="BOTH"
+    side="CLIENT"

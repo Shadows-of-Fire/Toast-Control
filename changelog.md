@@ -1,3 +1,6 @@
+## 6.0.1
+* Fixed dependencies being declared as both sides instead of just client.
+
 ## 6.0.0
 * Updated to 1.18.1
 
