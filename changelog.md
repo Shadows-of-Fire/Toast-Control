@@ -1,3 +1,6 @@
+## 6.0.2
+* Rebuilt for 1.18.2
+
 ## 6.0.1
 * Fixed dependencies being declared as both sides instead of just client.
 
