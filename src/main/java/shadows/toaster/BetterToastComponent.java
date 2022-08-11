@@ -94,7 +94,8 @@ public class BetterToastComponent extends ToastComponent {
 					if (it.next() == this) break;
 					trueIdx++;
 				}
-				stack.translate(scaledWidth - this.toast.width(), (trueIdx - 1) * this.toast.height() + this.toast.height() * this.getVisibility(i), 800 + arrayPos);
+				int x = ToastConfig.INSTANCE.startLeft.get() ? 0 : scaledWidth - this.toast.width();
+				stack.translate(x, (trueIdx - 1) * this.toast.height() + this.toast.height() * this.getVisibility(i), 800 + arrayPos);
 			} else if (ToastConfig.INSTANCE.startLeft.get()) stack.translate(-this.toast.width() + this.toast.width() * this.getVisibility(i), arrayPos * this.toast.height(), 800 + arrayPos);
 			else stack.translate(scaledWidth - this.toast.width() * this.getVisibility(i), arrayPos * this.toast.height(), 800 + arrayPos);
 			stack.translate(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);

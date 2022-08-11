@@ -1,3 +1,6 @@
+## 6.0.3
+* Fixed Top-Down Start-Left toasts starting at the right.
+
 ## 6.0.2
 * Rebuilt for 1.18.2
 
