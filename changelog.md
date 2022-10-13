@@ -1,3 +1,6 @@
+## 7.0.0
+* Updated to 1.19.2
+
 ## 6.0.3
 * Fixed Top-Down Start-Left toasts starting at the right.
 
