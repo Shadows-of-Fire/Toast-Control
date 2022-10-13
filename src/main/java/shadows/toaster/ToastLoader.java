@@ -22,6 +22,7 @@ public class ToastLoader {
 	public ToastLoader() {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			ToastControl mod = new ToastControl();
+			FMLJavaModLoadingContext.get().getModEventBus().addListener(mod::keyReg);
 			FMLJavaModLoadingContext.get().getModEventBus().addListener(mod::preInit);
 			MinecraftForge.EVENT_BUS.register(ToastConfig.class);
 			ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ToastConfig.SPEC);

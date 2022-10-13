@@ -1,6 +1,7 @@
 package shadows.toaster;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -8,7 +9,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Predicates;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.toasts.ToastComponent.ToastInstance;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -80,7 +80,7 @@ public class ToastConfig {
 		if (e.getConfig().getModId().equals(ToastControl.MODID)) {
 			ToastControl.handleToastReloc();
 			ToastControl.handleBlockedClasses();
-			((BetterToastComponent) Minecraft.getInstance().toast).visible = new ToastInstance[INSTANCE.toastCount.get()];
+			((BetterToastComponent) Minecraft.getInstance().toast).occupiedSlots = new BitSet(INSTANCE.toastCount.get());
 			ToastControl.LOGGER.info("Toast control config reloaded.");
 		}
 	}

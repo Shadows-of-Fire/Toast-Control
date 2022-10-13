@@ -10,7 +10,8 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -29,8 +30,12 @@ public class ToastControl {
 	public static final ResourceLocation ORIGINAL = new ResourceLocation("textures/gui/toasts.png");
 
 	@SubscribeEvent
-	public void keys(KeyInputEvent e) {
+	public void keys(InputEvent.Key e) {
 		if (CLEAR.isDown()) Minecraft.getInstance().getToasts().clear();
+	}
+
+	public void keyReg(RegisterKeyMappingsEvent e) {
+		e.register(CLEAR);
 	}
 
 	public void preInit(FMLClientSetupEvent e) {
@@ -70,8 +75,9 @@ public class ToastControl {
 
 	@SubscribeEvent
 	public void clientTick(ClientTickEvent e) {
-		if (e.phase == Phase.END) for (BetterToastInstance<?> t : tracker)
-			t.tick();
+		if (e.phase == Phase.END) {
+			tracker.removeIf(BetterToastInstance::tick);
+		}
 	}
 
 }
