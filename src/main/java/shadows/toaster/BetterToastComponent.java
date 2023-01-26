@@ -39,13 +39,14 @@ public class BetterToastComponent extends ToastComponent {
 
 			if (!this.queued.isEmpty() && this.freeSlots() > 0) {
 				this.queued.removeIf(toast -> {
-					int j = toast.slotCount();
-					int k = this.findFreeIndex(j);
-					if (k != -1) {
-						this.visible.add(new BetterToastInstance<>(toast, k, j));
-						this.occupiedSlots.set(k, k + j);
+					int count = toast.slotCount();
+					int freeIdx = this.findFreeIndex(count);
+					if (freeIdx != -1) {
+						var inst = new BetterToastInstance<>(toast, freeIdx, count);
+						this.visible.add(inst);
+						this.occupiedSlots.set(freeIdx, freeIdx + count);
 						this.topDownList.forEach(t -> t.animationTime = -1L);
-						this.topDownList.addFirst((BetterToastInstance<?>) this.visible.get(k));
+						this.topDownList.addFirst(inst);
 						return true;
 					}
 					return false;
