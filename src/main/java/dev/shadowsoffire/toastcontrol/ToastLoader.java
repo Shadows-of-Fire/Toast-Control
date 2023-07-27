@@ -1,4 +1,4 @@
-package shadows.toaster;
+package dev.shadowsoffire.toastcontrol;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

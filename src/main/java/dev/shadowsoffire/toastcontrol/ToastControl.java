@@ -1,4 +1,4 @@
-package shadows.toaster;
+package dev.shadowsoffire.toastcontrol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
+import dev.shadowsoffire.toastcontrol.BetterToastComponent.BetterToastInstance;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.Toast;
@@ -18,7 +19,6 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import shadows.toaster.BetterToastComponent.BetterToastInstance;
 
 public class ToastControl {
 

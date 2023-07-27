@@ -1,3 +1,9 @@
+## 8.0.1
+* Repackaged to dev.shadowsoffire.toastcontrol
+
+## 8.0.0
+* Updated to 1.20.1
+
 ## 7.0.0
 * Updated to 1.19.2
 

@@ -1,4 +1,4 @@
-package shadows.toaster;
+package dev.shadowsoffire.toastcontrol;
 
 import java.util.ArrayList;
 import java.util.BitSet;

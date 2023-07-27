@@ -1,4 +1,4 @@
-package shadows.toaster;
+package dev.shadowsoffire.toastcontrol;
 
 import dev.shadowsoffire.placebo.collections.BlockedDeque;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
