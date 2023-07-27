@@ -22,62 +22,63 @@ import shadows.toaster.BetterToastComponent.BetterToastInstance;
 
 public class ToastControl {
 
-	public static final String MODID = ToastLoader.MODID;
-	public static final Logger LOGGER = ToastLoader.LOGGER;
-	public static final KeyMapping CLEAR = new KeyMapping("key.toastcontrol.clear", GLFW.GLFW_KEY_J, "key.toastcontrol.category");
-	public static final ResourceLocation TRANSLUCENT = new ResourceLocation(MODID, "textures/gui/toasts.png");
-	public static final ResourceLocation TRANSPARENT = new ResourceLocation(MODID, "textures/gui/toasts2.png");
-	public static final ResourceLocation ORIGINAL = new ResourceLocation("textures/gui/toasts.png");
+    public static final String MODID = ToastLoader.MODID;
+    public static final Logger LOGGER = ToastLoader.LOGGER;
+    public static final KeyMapping CLEAR = new KeyMapping("key.toastcontrol.clear", GLFW.GLFW_KEY_J, "key.toastcontrol.category");
+    public static final ResourceLocation TRANSLUCENT = new ResourceLocation(MODID, "textures/gui/toasts.png");
+    public static final ResourceLocation TRANSPARENT = new ResourceLocation(MODID, "textures/gui/toasts2.png");
+    public static final ResourceLocation ORIGINAL = new ResourceLocation("textures/gui/toasts.png");
 
-	@SubscribeEvent
-	public void keys(InputEvent.Key e) {
-		if (CLEAR.isDown()) Minecraft.getInstance().getToasts().clear();
-	}
+    @SubscribeEvent
+    public void keys(InputEvent.Key e) {
+        if (CLEAR.isDown()) Minecraft.getInstance().getToasts().clear();
+    }
 
-	public void keyReg(RegisterKeyMappingsEvent e) {
-		e.register(CLEAR);
-	}
+    public void keyReg(RegisterKeyMappingsEvent e) {
+        e.register(CLEAR);
+    }
 
-	public void preInit(FMLClientSetupEvent e) {
-		Minecraft.getInstance().toast = new BetterToastComponent();
-		MinecraftForge.EVENT_BUS.register(this);
-		handleToastReloc();
-		handleBlockedClasses();
-	}
+    public void preInit(FMLClientSetupEvent e) {
+        Minecraft.getInstance().toast = new BetterToastComponent();
+        MinecraftForge.EVENT_BUS.register(this);
+        handleToastReloc();
+        handleBlockedClasses();
+    }
 
-	static void handleToastReloc() {
-		ResourceLocation target = Toast.TEXTURE;
-		if (ToastConfig.INSTANCE.translucent.get()) change(target, TRANSLUCENT);
-		if (ToastConfig.INSTANCE.transparent.get()) change(target, TRANSPARENT);
-		else if (!ToastConfig.INSTANCE.translucent.get() && !ToastConfig.INSTANCE.transparent.get()) change(target, ORIGINAL);
-	}
+    static void handleToastReloc() {
+        ResourceLocation target = Toast.TEXTURE;
+        if (ToastConfig.INSTANCE.translucent.get()) change(target, TRANSLUCENT);
+        if (ToastConfig.INSTANCE.transparent.get()) change(target, TRANSPARENT);
+        else if (!ToastConfig.INSTANCE.translucent.get() && !ToastConfig.INSTANCE.transparent.get()) change(target, ORIGINAL);
+    }
 
-	private static void change(ResourceLocation a, ResourceLocation b) {
-		ObfuscationReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getNamespace(), "f_135804_");
-		ObfuscationReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getPath(), "f_135805_");
-	}
+    private static void change(ResourceLocation a, ResourceLocation b) {
+        ObfuscationReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getNamespace(), "f_135804_");
+        ObfuscationReflectionHelper.setPrivateValue(ResourceLocation.class, a, b.getPath(), "f_135805_");
+    }
 
-	public static final List<Class<?>> BLOCKED_CLASSES = new ArrayList<>();
+    public static final List<Class<?>> BLOCKED_CLASSES = new ArrayList<>();
 
-	static void handleBlockedClasses() {
-		BLOCKED_CLASSES.clear();
-		for (String s : ToastConfig.INSTANCE.blockedClasses.get()) {
-			try {
-				Class<?> c = Class.forName(s);
-				BLOCKED_CLASSES.add(c);
-			} catch (ClassNotFoundException e) {
-				LOGGER.error("Invalid class string provided to toast control: " + s);
-			}
-		}
-	}
+    static void handleBlockedClasses() {
+        BLOCKED_CLASSES.clear();
+        for (String s : ToastConfig.INSTANCE.blockedClasses.get()) {
+            try {
+                Class<?> c = Class.forName(s);
+                BLOCKED_CLASSES.add(c);
+            }
+            catch (ClassNotFoundException e) {
+                LOGGER.error("Invalid class string provided to toast control: " + s);
+            }
+        }
+    }
 
-	public static List<BetterToastInstance<?>> tracker = new ArrayList<>();
+    public static List<BetterToastInstance<?>> tracker = new ArrayList<>();
 
-	@SubscribeEvent
-	public void clientTick(ClientTickEvent e) {
-		if (e.phase == Phase.END) {
-			tracker.removeIf(BetterToastInstance::tick);
-		}
-	}
+    @SubscribeEvent
+    public void clientTick(ClientTickEvent e) {
+        if (e.phase == Phase.END) {
+            tracker.removeIf(BetterToastInstance::tick);
+        }
+    }
 
 }
