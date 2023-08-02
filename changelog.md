@@ -1,3 +1,7 @@
+## 8.0.2
+* Fixed an issue where item tooltips broke while toasts were rendering.
+* FITFC: Added brazillian translation.
+
 ## 8.0.1
 * Repackaged to dev.shadowsoffire.toastcontrol
 

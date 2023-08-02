@@ -28,7 +28,7 @@ public class BetterToastComponent extends ToastComponent {
     @Override
     public void render(GuiGraphics gfx) {
         if (!this.minecraft.options.hideGui) {
-            int width = this.minecraft.getWindow().getGuiScaledWidth();
+            int width = gfx.guiWidth();
             this.visible.removeIf(inst -> {
                 if (inst != null && inst.render(width, gfx)) {
                     this.occupiedSlots.clear(inst.index, inst.index + inst.slotCount);
@@ -135,7 +135,7 @@ public class BetterToastComponent extends ToastComponent {
                 this.visibleTime = sysTime;
             }
 
-            PoseStack stack = RenderSystem.getModelViewStack();
+            PoseStack stack = gfx.pose();
             stack.pushPose();
 
             if (ToastConfig.INSTANCE.topDown.get()) {
@@ -150,13 +150,11 @@ public class BetterToastComponent extends ToastComponent {
             }
 
             stack.translate(ToastConfig.INSTANCE.offsetX.get(), ToastConfig.INSTANCE.offsetY.get(), 0);
-            RenderSystem.applyModelViewMatrix();
             RenderSystem.enableBlend();
             Toast.Visibility visibility = Toast.Visibility.SHOW;
             if (this.animationTime != -1) visibility = this.toast.render(gfx, BetterToastComponent.this, sysTime - this.visibleTime);
             RenderSystem.disableBlend();
             stack.popPose();
-            RenderSystem.applyModelViewMatrix();
 
             if (this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && visibility != this.visibility) {
                 this.animationTime = sysTime - (long) ((1 - this.getVisibility(sysTime)) * 600);
