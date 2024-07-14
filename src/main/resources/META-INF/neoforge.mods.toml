@@ -1,6 +1,6 @@
 modLoader="javafml" #mandatory
 
-loaderVersion="[32,)" #mandatory
+loaderVersion="[1,)" #mandatory
 
 authors="${author}" #optional
 

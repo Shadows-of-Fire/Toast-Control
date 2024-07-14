@@ -1,7 +1,6 @@
 package dev.shadowsoffire.toastcontrol;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -9,19 +8,19 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Predicates;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
+import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
+import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 
 public class ToastConfig {
 
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec SPEC;
     public static final ToastConfig INSTANCE;
     static {
-        Pair<ToastConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ToastConfig::new);
+        Pair<ToastConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(ToastConfig::new);
         SPEC = specPair.getRight();
         INSTANCE = specPair.getLeft();
     }
@@ -47,7 +46,7 @@ public class ToastConfig {
 
     public final BooleanValue printClasses;
 
-    public ToastConfig(ForgeConfigSpec.Builder build) {
+    public ToastConfig(ModConfigSpec.Builder build) {
         build.comment("Client Configuration").push("client").push("blocked_toasts");
 
         this.advancements = build.comment("If advancement toasts are blocked.").define("advancements", true);
@@ -75,13 +74,23 @@ public class ToastConfig {
         build.pop().pop();
     }
 
+    public static boolean isTextureTransparent() {
+        return INSTANCE.transparent.getAsBoolean();
+    }
+
+    public static boolean isTextureTranslucent() {
+        return INSTANCE.translucent.getAsBoolean();
+    }
+
     @SubscribeEvent
-    public static void onLoad(ModConfigEvent.Loading e) {
+    public static void onLoad(ModConfigEvent.Reloading e) {
         if (ToastControl.MODID.equals(e.getConfig().getModId())) {
-            ToastControl.handleToastReloc();
-            ToastControl.handleBlockedClasses();
-            ((BetterToastComponent) Minecraft.getInstance().toast).occupiedSlots = new BitSet(INSTANCE.toastCount.get());
-            ToastControl.LOGGER.info("Toast control config reloaded.");
+            Minecraft.getInstance().submit(() -> {
+                Minecraft.getInstance().toast = new BetterToastComponent();
+                ToastControl.handleToastReloc();
+                ToastControl.handleBlockedClasses();
+                ToastControl.LOGGER.info("Toast control config reloaded.");
+            });
         }
     }
 

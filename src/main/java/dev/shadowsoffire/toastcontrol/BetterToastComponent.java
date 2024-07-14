@@ -89,7 +89,7 @@ public class BetterToastComponent extends ToastComponent {
         return ToastConfig.INSTANCE.toastCount.get() - this.occupiedSlots.cardinality();
     }
 
-    public class BetterToastInstance<T extends Toast>extends ToastInstance<T> {
+    public class BetterToastInstance<T extends Toast> extends ToastInstance<T> {
 
         protected int forcedShowTime = 0;
 
@@ -109,7 +109,6 @@ public class BetterToastComponent extends ToastComponent {
             return this.forcedShowTime > ToastConfig.INSTANCE.forceTime.get() && this.visibility == Toast.Visibility.HIDE ? 1F - f : f;
         }
 
-        @SuppressWarnings("deprecation")
         @Override
         public boolean render(int scaledWidth, GuiGraphics gfx) {
             long sysTime = Util.getMillis();
