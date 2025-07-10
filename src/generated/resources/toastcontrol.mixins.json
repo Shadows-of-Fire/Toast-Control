@@ -1,0 +1,13 @@
+{
+    "required": true,
+    "package": "dev.shadowsoffire.toastcontrol.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "refmap": "toastcontrol.refmap.json",
+    "mixins": [
+
+    ],
+    "client": [
+
+    ],
+    "minVersion": "0.8"
+}

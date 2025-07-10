@@ -1,0 +1,40 @@
+modLoader="javafml"
+
+loaderVersion="[2,)"
+
+license="MIT License"
+
+[[mods]] #mandatory
+
+modId="toastcontrol"
+
+version="9.0.1"
+
+displayName="Toast Control"
+
+authors="Shadows_of_Fire"
+
+description='''Blocking annoying popups since 1.12'''
+
+
+
+[[dependencies.toastcontrol]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.21.1,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.toastcontrol]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.1.187,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.toastcontrol]]
+    modId="placebo"
+    type="required"
+    versionRange="[9.9.0,)"
+    ordering="NONE"
+    side="BOTH"
