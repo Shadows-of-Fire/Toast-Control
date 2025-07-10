@@ -56,7 +56,7 @@ public class ToastConfig {
         this.globalVanilla = build.comment("If all vanilla toasts are blocked.").define("global_vanilla", false);
         this.globalModded = build.comment("If all non-vanilla toasts are blocked.").define("global_modded", false);
         this.global = build.comment("If all toasts are blocked.").define("global", false);
-        this.blockedClasses = build.comment("Toast Classes that are blocked from being shown.").defineList("blocked_classes", new ArrayList<>(), Predicates.alwaysTrue());
+        this.blockedClasses = build.comment("Toast Classes that are blocked from being shown.").defineList("blocked_classes", new ArrayList<>(), () -> "some.package.name.ClassName", Predicates.alwaysTrue());
 
         build.pop().push("visual_options");
         this.forceTime = build.comment("How long a toast must be on the screen for, in ticks.  Use 0 to use the default time.").defineInRange("force_time", 0, 0, 4000);
