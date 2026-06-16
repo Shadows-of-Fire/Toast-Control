@@ -339,7 +339,7 @@ publishMods {
             minecraftVersions.add(mcVersion)
             javaVersions.add(JavaVersion.toVersion(javaVersion))
             client = true
-            server = true
+            server = false
             applyDeps(delegate, 'curseforge')
         }
     }
@@ -355,6 +355,6 @@ publishMods {
 }
 
 task publishAll() {
-    dependsOn publish
-    dependsOn publishMods
+    dependsOn 'publish'
+    dependsOn 'publishMods'
 }
