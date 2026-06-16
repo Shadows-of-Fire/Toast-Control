@@ -86,7 +86,7 @@ public class ToastConfig {
     public static void onLoad(ModConfigEvent.Reloading e) {
         if (ToastControl.MODID.equals(e.getConfig().getModId())) {
             Minecraft.getInstance().submit(() -> {
-                Minecraft.getInstance().toast = new BetterToastComponent();
+                Minecraft.getInstance().toastManager = new BetterToastManager();
                 ToastControl.handleToastReloc();
                 ToastControl.handleBlockedClasses();
                 ToastControl.LOGGER.info("Toast control config reloaded.");

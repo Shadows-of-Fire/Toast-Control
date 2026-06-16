@@ -8,7 +8,7 @@ license="MIT License"
 
 modId="toastcontrol"
 
-version="9.0.1"
+version="10.0.0-beta0"
 
 displayName="Toast Control"
 
@@ -21,20 +21,20 @@ description='''Blocking annoying popups since 1.12'''
 [[dependencies.toastcontrol]]
     modId="minecraft"
     type="required"
-    versionRange="[1.21.1,)"
+    versionRange="[26.1.2,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.toastcontrol]]
     modId="neoforge"
     type="required"
-    versionRange="[21.1.187,)"
+    versionRange="[26.1.2.64-beta,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.toastcontrol]]
     modId="placebo"
     type="required"
-    versionRange="[9.9.0,)"
+    versionRange="[10.0.1,)"
     ordering="NONE"
     side="BOTH"
